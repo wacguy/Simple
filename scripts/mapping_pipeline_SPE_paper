@@ -1,4 +1,5 @@
-```bash
+```shell
+
 #!/bin/bash
 #pipeline for mapping EMS mutants
 # require for mac (10.11.6) and Linux (centOS 6.7) Java 1.7 (7u79; http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
@@ -139,6 +140,7 @@ awk 'BEGIN{OFS="\t"} {split($6,a,"|");split($8,b,":"); split(b[2],c,","); split(
 ####################################################################################################################################################
 ####################################################################################################################################################
 Rscript ./scripts/analysis3.R
+
 ```
 
 
