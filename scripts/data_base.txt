@@ -1,0 +1,3 @@
+organism	fasta	knownsnps	snpEff_genome	snpEff_database
+Arabidopsis_thaliana	ftp://ftp.ensemblgenomes.org/pub/plants/release-32/fasta/arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz	ftp://ftp.ensemblgenomes.org/pub/plants/release-32/vcf/arabidopsis_thaliana/arabidopsis_thaliana.vcf.gz	TAIR10.29	http://downloads.sourceforge.net/project/snpeff/databases/v4_2/snpEff_v4_2_ENSEMBL_BFMPP_29_20.zip
+Oryza_sativa_Japonica	ftp://ftp.ensemblgenomes.org/pub/plants/release-32/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.dna.toplevel.fa.gz	ftp://ftp.ensemblgenomes.org/pub/plants/release-32/vcf/oryza_sativa/oryza_sativa.vcf.gz	rice7	http://downloads.sourceforge.net/project/snpeff/databases/v4_2/snpEff_v4_2_rice7.zip
