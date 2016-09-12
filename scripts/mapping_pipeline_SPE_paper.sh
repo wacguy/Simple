@@ -3,17 +3,17 @@
 # require for mac (10.11.6) and Linux (centOS 6.7) Java 1.7 (7u79; http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 
 
-# 1. Download and unpack the mapper package from where-do-we-host-it?
+# 1. Download and unpack the mapper package from the following link: https://github.com/wacguy/EMS_mapper by pressing the green link: "Clone or download"
 # 2. Place the mapper folder in your home directory.
 # 3. Rename your fastq files as follow. For the mutant and WT bulk, the names should start with mut. and wt. respectively (note the dot); for single or paired-end you should then have R1 or R1 and R2, respectively and end with .fastq. For example, if your mutant bulk was sequence in a paired-end format and the WT as single-end you should rename the three files as follow: mut.R1.fastq, mut.R2.fastq and wt.R1.fastq
 # 4. Place the renamed fastq files in the fastq folder within the mapper folder.
-# 5. Decompress the relevant (your species) reference file in the ref folder. That will create a folder with genome.fa and knownsmps.vcf files. Transfer these two files to the ref folder (one directory up). If the species you are working with has no files in this folder you should be able to download the FASTA and knownsnsps (a VCF file) from Ensembl. For example, for corn, go to the following link: http://plants.ensembl.org/Zea_mays/Info/Index. The FASTA file is under the genome assembly section; download the toplevel DNA file. The VCF file is under the variation section at the same webpage (zea_mays.vcf.gz). Unpack the files in the ref folder and name them genome.fa for the FASTA file and knownsnsps.vcf for the VCF file. If your species does not have a VCF file, unpack the empty.vcf.tar.gz file that is already located in the ref folder and place it in the ref folder.
-# 6. Open the folder programs and then the folder snpEFF. Open the snpEFF.database.xlxs file and find your species in the second column (e.g., Rice); most species will have more than one entry. Chose the latest annotation as shown in the first column. For example, for rice the latest annotation would be rice7. Copy this latest annotation name.
-# 7. Open the file mapping_pipeline_SPE_paper located in the scripts folder within the mapper folder and paste the genome annotation name you just copied to replace the text “paste_the_snpEff_genome_annotation_here. Save the file.
+# 5. Open the folder scripts inside mapper; open the data_base.txt file. Locate your species in the first column and copy it. 
+# 6. Open the file mapping_pipeline_SPE_paper.sh inside the folder scripts and paste the species name you've just copied to replace Arabidopsis_thaliana as the species name (e.g., this line should look like my_species=Arabidopsis_thaliana or my_species=Oryza_sativa_Japonica)
+
 # 8. Open the Terminal application
 # 9. Type: cd ~/mapper. Press return.
 # 10. Type: chmod +x ./scripts/mapping_pipelinre_SPE_paper. Press return.
-# 11. Type: ./scripts//mapping_pipelinre_SPE_paper. Press return.
+# 11. Type: ./scripts/mapping_pipeline_SPE_paper. Press return.
 # 12. The last command will execute the program.
 
 # 13. The script will run for a few hours to a couple of days, Depending on the size of your fastq files and the size of the genome you are working with. You will know it finished once the prompt is back (the $ sign) and the file Rplot.pdf is located in the output folder.
@@ -30,6 +30,7 @@ wt_files=fastq/wt*
 line=EMS
 mut=EMS_mut
 wt=EMS_wt
+my_species=Arabidopsis_thaliana
 
 #install programs bwa and samtools
 cd programs/bwa-0.7.12
@@ -42,21 +43,41 @@ make
 
 cd ../../
 
+#downloading & creating fasta file
+fasta_link=`awk '$1~/Arabidopsis_thaliana/ {print $2}' ./scripts/data_base.txt`
+
+if ! [ -f ./refs/$my_species.fa ]; then
+  curl -o ./refs/$my_species.fa.gz $fasta_link
+  gzip -d ./refs/$my_species.fa.gz
+fi
+
+
+#downloading & creating knownsnps file
+knownsnps_link=`awk '$1~/Arabidopsis_thaliana/ {print $3}' ./scripts/data_base.txt`
+if ! [ -f ./refs/$my_species.vcf ]; then
+  curl -o ./refs/$my_species.vcf.gz $knownsnps_link
+  gzip -d ./refs/$my_species.vcf.gz
+fi
+
+#snpEff "link"
+snpEff_link=`awk '$1~/Arabidopsis_thaliana/ {print $4}' ./scripts/data_base.txt`
+
 
 #reference input files that are necessary to run the prograns
-fa=refs/genome.fa
-knownsnps=refs/knownsnps.vcf #ftp://ftp.ensemblgenomes.org/pub/plants/release-31/vcf/arabidopsis_thaliana/arabidopsis_thaliana.vcf.gz
-snpEffDB=TAIR10.29 #paste the snpEff annotated genome name
+fa=refs/$my_species.fa
+knownsnps=refs/$my_species.vcf
+#ftp://ftp.ensemblgenomes.org/pub/plants/release-31/vcf/arabidopsis_thaliana/arabidopsis_thaliana.vcf.gz
+snpEffDB=$snpEff_link #paste the snpEff annotated genome name
 
 #reference files that need to generated
 #creating .fai file
 programs/samtools-0.1.19/samtools faidx $fa
 #creating bwa index files
-programs/bwa-0.7.12/bwa index -p genome.fa -a is $fa
-mv genome* refs/
+programs/bwa-0.7.12/bwa index -p $my_species.fa -a is $fa
+mv $my_species.* refs/
 
 #generating dict file for GATK
-java -Xmx2g -jar programs/picard-tools-1.119/CreateSequenceDictionary.jar R=$fa O=refs/genome.dict
+java -Xmx2g -jar programs/picard-tools-1.119/CreateSequenceDictionary.jar R=$fa O=refs/$my_species.dict
 #mapping w/ BWA
 programs/bwa-0.7.12/bwa mem -t 2 -M $fa ${mut_files[*]} > output/$mut.sam &
 programs/bwa-0.7.12/bwa mem -t 2 -M $fa ${wt_files[*]} > output/$wt.sam
@@ -138,7 +159,6 @@ awk 'BEGIN{OFS="\t"} {split($6,a,"|");split($8,b,":"); split(b[2],c,","); split(
 ####################################################################################################################################################
 ####################################################################################################################################################
 Rscript ./scripts/analysis3.R
-
 
 
 
