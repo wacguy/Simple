@@ -10,7 +10,7 @@
 # 5. Open the folder scripts inside mapper; open the data_base.txt file. Locate your species in the first column and copy it. 
 # 6. Open the file mapping_pipeline_SPE_paper.sh inside the folder scripts and paste the species name you've just copied to replace Arabidopsis_thaliana as the species name (e.g., this line should look like my_species=Arabidopsis_thaliana or my_species=Oryza_sativa_Japonica)
 
-# 8. Open the Terminal application
+# 7. Open the Terminal application.
 # 9. Type: cd ~/mapper. Press return.
 # 10. Type: chmod +x ./scripts/mapping_pipelinre_SPE_paper. Press return.
 # 11. Type: ./scripts/mapping_pipeline_SPE_paper. Press return.
@@ -30,7 +30,7 @@ wt_files=fastq/wt*
 line=EMS
 mut=EMS_mut
 wt=EMS_wt
-my_species=Arabidopsis_thaliana
+my_species=Drosophila_melanogaster
 
 #install programs bwa and samtools
 cd programs/bwa-0.7.12
@@ -44,7 +44,7 @@ make
 cd ../../
 
 #downloading & creating fasta file
-fasta_link=`awk '$1~/Arabidopsis_thaliana/ {print $2}' ./scripts/data_base.txt`
+fasta_link=`awk -v var="$my_species" 'match($1, var) {print $2}' ./scripts/data_base.txt`
 
 if ! [ -f ./refs/$my_species.fa ]; then
   curl -o ./refs/$my_species.fa.gz $fasta_link
@@ -53,14 +53,14 @@ fi
 
 
 #downloading & creating knownsnps file
-knownsnps_link=`awk '$1~/Arabidopsis_thaliana/ {print $3}' ./scripts/data_base.txt`
+knownsnps_link=`awk -v var="$my_species" 'match($1, var) {print $3}' ./scripts/data_base.txt`
 if ! [ -f ./refs/$my_species.vcf ]; then
   curl -o ./refs/$my_species.vcf.gz $knownsnps_link
   gzip -d ./refs/$my_species.vcf.gz
 fi
 
 #snpEff "link"
-snpEff_link=`awk '$1~/Arabidopsis_thaliana/ {print $4}' ./scripts/data_base.txt`
+snpEff_link=`awk -v var="$my_species" 'match($1, var) {print $4}' ./scripts/data_base.txt`
 
 
 #reference input files that are necessary to run the prograns
