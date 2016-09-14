@@ -30,7 +30,7 @@ wt_files=fastq/wt*
 line=EMS
 mut=EMS_mut
 wt=EMS_wt
-my_species=Drosophila_melanogaster
+my_species=Arabidopsis_thaliana
 
 #install programs bwa and samtools
 cd programs/bwa-0.7.12
