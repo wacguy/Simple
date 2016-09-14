@@ -54,9 +54,9 @@ fi
 
 #downloading & creating knownsnps file
 knownsnps_link=`awk -v var="$my_species" 'match($1, var) {print $3}' ./scripts/data_base.txt`
-if ! [ -f ./refs/$my_species.vcf ]; then
-  curl -LOK ./refs/$my_species.vcf.gz
-  gzip -d ./refs/$my_species.vcf.gz
+if ! [ -f ./refs/$my_species.txt ]; then
+  curl -o ./refs/$my_species.txt.gz $knownsnps_link
+  gzip -d ./refs/$my_species.txt.gz
 fi
 
 #snpEff "link"
