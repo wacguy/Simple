@@ -13,7 +13,7 @@ wt_files=fastq/wt*
 line=EMS
 mut=EMS_mut
 wt=EMS_wt
-my_species=Arabidopsis_thaliana####################paste your species name here########
+my_species=Arabidopsis_thaliana ####################paste your species name here########
 
 #install programs bwa and samtools
 cd programs/bwa-0.7.12
