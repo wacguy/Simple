@@ -30,9 +30,18 @@ head(tbl1)
 breaks=seq(0, max(tbl1$pos), round(max(tbl1$pos)/3, digits=-7))
 
 
-x11()
+#x11()
 #separated chromosomes original data
-ggplot(tbl1, aes(x=pos, y=ratio))+geom_point(data=tbl1, aes(x=pos, y=ratio, color=as.factor(tbl1[,3])),size=0.3)+facet_wrap(~chr, scales='free_x')+geom_point(data=tbl1.cands, aes(x=pos, y=ratio), shape=5)+geom_text_repel(data=tbl1.cands, aes(x=pos, y=ratio, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks)
+#ggplot(tbl1, aes(x=pos, y=ratio))+geom_point(data=tbl1, aes(x=pos, y=ratio, color=as.factor(tbl1[,3])),size=0.3)+facet_wrap(~chr, scales='free_x')+geom_point(data=tbl1.cands, aes(x=pos, y=ratio), shape=5)+geom_text_repel(data=tbl1.cands, aes(x=pos, y=ratio, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks)
+
+
+
+#separated chromosomes original data; after filtering (tbl2)
+tbl2=tbl1[(tbl1[,11]>0.1),]
+dim(tbl2)
+
+x11()
+ggplot(tbl2, aes(x=pos, y=ratio))+geom_point(data=tbl2, aes(x=pos, y=ratio, color=as.factor(tbl2[,3])),size=0.3)+facet_wrap(~chr, scales='free_x')+geom_point(data=tbl1.cands, aes(x=pos, y=ratio), shape=5)+geom_text_repel(data=tbl1.cands, aes(x=pos, y=ratio, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks)
 
 ggsave("Rplot.pdf")
 
