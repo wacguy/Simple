@@ -1,6 +1,7 @@
 #pipeline for mapping EMS mutants
 
-# runs on mac (10.11.6) or Linux (centOS 6.7) and requires Java 1.7 (7u79; http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
+# runs on mac (10.11.6) or Linux (centOS 6.7)
+#requires Java 1.7 (7u79; http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) and R
 
 
 # 1. Download and unpack the Simple package from the following link: https://github.com/wacguy/EMS_Simple by pressing the green link: "Clone or download"
