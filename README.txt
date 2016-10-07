@@ -15,5 +15,5 @@
 # 10. Type: chmod +x ./scripts/simple.sh. Press return.
 # 11. Type: ./scripts/simple.sh. Press return.
 # 12. The last command will execute the program.
-# 13. The script will run for a few hours up to a couple of days, depending on the size of your fastq files and the size of the genome you are working with. You will know it finished once the prompt is back (shows the $ sign) and the file Rplot.pdf is located in the output folder.
+# 13. The script will run for a few hours up to a couple of days, depending on the size of your fastq files and the size of the genome you are working with. You will know it finished once the prompt says “Simple is done”.
 
