@@ -1,9 +1,8 @@
 #################################################################################
 #################################################################################
-setwd("/Users/guywachsman/Guy/EMS/pipeline/kevin/")
-mntn=read.delim("plot4.txt", header=T)
-cnds=read.delim("cands4.txt", header =T, sep = "\t")
-
+# setwd("/Users/guywachsman/Guy/EMS/pipeline/M3_300_7/")
+# mntn=read.delim("M3_300_7.plot4.txt", header=T)
+# cnds=read.delim("M3_300_7.cands4.txt", header =T, sep = "\t")
 
 setwd("./output")
 library("ggplot2")
@@ -61,10 +60,6 @@ ggsave("Rplot.pdf")
 #x11()
 #separated chromosomes original data
 #ggplot(tbl1, aes(x=pos, y=ratio))+geom_point(data=tbl1, aes(x=pos, y=ratio, color=as.factor(tbl1[,3])),size=0.3)+facet_wrap(~chr, scales='free_x')+geom_point(data=tbl1.cands, aes(x=pos, y=ratio), shape=5)+geom_text_repel(data=tbl1.cands, aes(x=pos, y=ratio, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks)
-
-
-
-
 
 
 
