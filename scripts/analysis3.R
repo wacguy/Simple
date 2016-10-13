@@ -46,11 +46,11 @@ fitted=Reduce(c, mmm)
 tbl3=data.frame(tbl2, fitted)
 head(tbl3)
 tbl3.cands=tbl3[(tbl3[,3] %in% cnds[,1]) & (tbl3[,4] %in% cnds[,2]),]
-
+?loess
 x11()
 ggplot(tbl3, aes(x=pos, y=fitted))+geom_point(data=tbl3, aes(x=pos, y=fitted, color=as.factor(tbl3[,3])),size=0.3)+facet_wrap(~chr, scales='free_x')+geom_point(data=tbl3.cands, aes(x=pos, y=fitted), shape=5)+geom_text_repel(data=tbl3.cands, aes(x=pos, y=fitted, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks)
 
-ggsave("Rplot.pdf")
+ggsave("Rplot_span0.3.pdf")
 #######################################
 #######################################
 
