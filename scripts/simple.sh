@@ -5,6 +5,10 @@
 #trap 'exec 2>&4 1>&3' 0 1 2 3
 #exec 1>log.out 2>&1
 
+#creating a log file for the input commands; I also wanted to have logs for the output but some of the stdout are super long
+cat ./scripts/simple.sh > log.txt
+cat ./scripts/analysis3.R >> log.txt
+
 #input files
 mut_files=fastq/mut*
 wt_files=fastq/wt*
