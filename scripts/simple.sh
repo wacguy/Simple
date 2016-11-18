@@ -6,8 +6,8 @@
 #exec 1>log.out 2>&1
 
 #creating a log file for the input commands; I also wanted to have logs for the output but some of the stdout are super long
-cat ./scripts/simple.sh > log.txt
-cat ./scripts/analysis3.R >> log.txt
+cat ./scripts/simple.sh > ./output/log.txt
+cat ./scripts/analysis3.R >> ./output/log.txt
 
 #input files
 mut_files=fastq/mut*

@@ -47,9 +47,26 @@ fitted=Reduce(c, mmm)
 tbl3=data.frame(tbl2, fitted)
 tbl3.cands=tbl3[(tbl3[,3] %in% cnds[,1]) & (tbl3[,4] %in% cnds[,2]),]
 
+#making the x-axes labels less messy
+fancy_scientific <- function(l) {
+     # turn in to character string in scientific notation
+     l <- format(l, scientific = TRUE)
+     l <- gsub("0e\\+00","0",l)
+     # quote the part before the exponent to keep all the digits
+     l <- gsub("^(.*)e", "'\\1'e", l)
+     # turn the 'e+' into plotmath format
+     l <- gsub("e\\+","e",l)
+     l <- gsub("e", "%*%10^", l)
+     l <- gsub("\\'1[\\.0]*\\'\\%\\*\\%", "", l)
+     l <- gsub("\\.0", "", l)
+     #l <- gsub("\\'[\\.0]'", "", l)
+     # return this as an expression
+     parse(text=l)
+}
+
 
 x11()
-ggplot(tbl3, aes(x=pos, y=fitted))+geom_point(data=tbl3, aes(x=pos, y=fitted, color=as.factor(tbl3[,3])),size=0.3)+facet_wrap(~chr, scales='free_x')+geom_point(data=tbl3.cands, aes(x=pos, y=fitted), shape=5)+geom_text_repel(data=tbl3.cands, aes(x=pos, y=fitted, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks)+labs(x="position", y="ratio")
+ggplot(tbl3, aes(x=pos, y=fitted))+geom_point(data=tbl3, aes(x=pos, y=fitted, color=as.factor(tbl3[,3])),size=0.3)+facet_wrap(~chr, scales='free_x')+geom_point(data=tbl3.cands, aes(x=pos, y=fitted), shape=5)+geom_text_repel(data=tbl3.cands, aes(x=pos, y=fitted, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks, labels=fancy_scientific, limits = c(0, max(tbl1$pos)))+labs(x="position", y="ratio")
 
 ggsave("Rplot.pdf")
 #######################################
