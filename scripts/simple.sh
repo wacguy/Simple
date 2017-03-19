@@ -32,7 +32,8 @@ if ! [ -f ./refs/$my_species.fa ]; then
   gzip -d ./refs/$my_species.fa.gz
 fi
 
-fa=`awk '1;/^>/ && (!/[Cc]hromosome/ || /[Ss]cafold/ || /[Cc]ontig/ || /[Mm]itochondr/){exit}' refs/$my_species.fa | head -n -1`
+awk '1;/^>/ && (!/[Cc]hromosome/ || /[Ss]cafold/ || /[Cc]ontig/ || /[Mm]itochondr/){exit}' ./refs/$my_species.fa | head -n -1 > ./refs/$my_species.chrs.fa
+fa=./refs/$my_species.chrs.fa
 
 #downloading & creating knownsnps file
 knownsnps_link=`awk -v var="$my_species" 'match($1, var) {print $3}' ./scripts/data_base.txt`
@@ -46,8 +47,7 @@ snpEff_link=`awk -v var="$my_species" 'match($1, var) {print $4}' ./scripts/data
 
 
 #reference input files that are necessary to run the prograns
-fa=`awk '1;/^>/ && (!/[Cc]hromosome/ || /[Ss]cafold/ || /[Cc]ontig/ || /[Mm]itochondr/){exit}' refs/$my_species.fa | head -n -1`
-knownsnps=refs/$my_species.vcf
+knownsnps=./refs/$my_species.vcf
 #ftp://ftp.ensemblgenomes.org/pub/plants/release-31/vcf/arabidopsis_thaliana/arabidopsis_thaliana.vcf.gz
 snpEffDB=$snpEff_link #paste the snpEff annotated genome name
 
@@ -55,11 +55,11 @@ snpEffDB=$snpEff_link #paste the snpEff annotated genome name
 #creating .fai file
 programs/samtools-0.1.19/samtools faidx $fa
 #creating bwa index files
-programs/bwa-0.7.12/bwa index -p $my_species.fa -a is $fa
-mv $my_species.* refs/
+programs/bwa-0.7.12/bwa index -p $my_species.chrs.fa -a is $fa
+mv $my_species.chrs.* refs/
 
 #generating dict file for GATK
-java -Xmx2g -jar programs/picard-tools-1.119/CreateSequenceDictionary.jar R=$fa O=refs/$my_species.dict
+java -Xmx2g -jar programs/picard-tools-1.119/CreateSequenceDictionary.jar R=$fa O=refs/$my_species.chrs.dict
 
 #mapping w/ BWA
 programs/bwa-0.7.12/bwa mem -t 2 -M $fa ${mut_files[*]} > output/$mut.sam &
