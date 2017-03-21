@@ -72,7 +72,7 @@ ggsave("Rplot.1.pdf")
 
 #########################################################################
 #separated chromosomes original data; after filtering (tbl2)-LOESS fitted
-#removing ratios below 0.1
+#removing ratios below 0.3
 #########################################################################
 tbl2=tbl1[(tbl1[,11]>0.3),]
 t2_s=split(tbl2, tbl2$chr)
