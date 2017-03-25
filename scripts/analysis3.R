@@ -2,7 +2,9 @@
 #################################################################################
 # setwd("/Users/guywachsman/Guy/EMS1/pipeline/manuel")
 # mntn=read.delim("/Users/guywachsman/Guy/EMS1/pipeline/manuel/manuel.plot4.txt", header=T)
-# cnds=read.delim("/Users/guywachsman/Guy/EMS1/pipeline/manuel/manuel.cands4.txt", header =T, sep = "\t")
+# cnds=read.delim("/Users/guywachsman/Guy/EMS1/pipeline/manuel/manuel.candidates.txt", header =T, sep = "\t")
+# setwd("/Users/guywachsman/Guy/EMS1/pipeline/SIMPLE/Simple")
+
 
 setwd("./output")
 library("ggplot2")
@@ -16,10 +18,17 @@ library("reshape2")
 # library(scales)
 # library(KernSmooth)
 
-mntn=read.delim("EMS.plot4.txt", header=T)#In my previous version of R, but NOT on the bioross server, R adds an extra NA column
-cnds=read.delim("EMS.cands4.txt", header =T, sep = "\t")
+#JEN inputting the line information and setting filenames
+args <- commandArgs(trailingOnly=TRUE)
+line <- args[1]
+plotfilename <- paste(line, ".allSNPs.txt", sep="")
+candidatefilename <- paste(line, ".candidates.txt", sep="")
 
-mntn1=droplevels(mntn[(mntn$chr!="Mt")|(mntn$chr!="Pt"),])
+
+mntn=read.delim(plotfilename, header=T)#In my previous version of R, but NOT on the bioross server, R adds an extra NA column
+cnds=read.delim(candidatefilename, header =T, sep = "\t")
+
+mntn1=droplevels(mntn[((mntn$chr!="Mt")&(mntn$chr!="Pt")),])
 #mntn1=droplevels(mntn[((mntn$ref=="C"&mntn$alt=="T")|(mntn$ref=="G"&mntn$alt=="A"))&(mntn$chr!="Mt")&(mntn$chr!="Pt"),])
 
 # tbl1[tbl1[,1]=="AT3G28550",]
@@ -68,7 +77,9 @@ fancy_scientific <- function(l) {
 x11()
 ggplot(tbl3, aes(pos, fitted)) + geom_point(aes(color=chr),size=0.3)+ facet_grid (.~ chr, scales = "free_x", space = "free_x")+geom_point(data=tbl3.cands, aes(x=pos, y=fitted), shape=5)+geom_text_repel(data=tbl3.cands, aes(x=pos, y=fitted, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks, labels=fancy_scientific)+labs(x="position", y="ratio")
 
-ggsave("Rplot.1.pdf")
+#JEN changed file name
+Rplot_loess1_file <- paste(line, ".Rplot.loess.1.pdf", sep="")
+ggsave(Rplot_loess1_file)
 
 #########################################################################
 #separated chromosomes original data; after filtering (tbl2)-LOESS fitted
@@ -103,7 +114,9 @@ fancy_scientific <- function(l) {
 x11()
 ggplot(tbl3, aes(pos, fitted)) + geom_point(aes(color=chr),size=0.3)+ facet_grid (.~ chr, scales = "free_x", space = "free_x")+geom_point(data=tbl3.cands, aes(x=pos, y=fitted), shape=5)+geom_text_repel(data=tbl3.cands, aes(x=pos, y=fitted, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks, labels=fancy_scientific)+labs(x="position", y="ratio")
 
-ggsave("Rplot.3.pdf")
+# JEN changed file name
+Rplot_loess3_file <- paste(line, ".Rplot.loess.3.pdf", sep="")
+ggsave(Rplot_loess3_file)
 
 #and getting the allele frequency
 tbl3.m=melt(tbl3, id.vars=c('At_num', 'gene', 'chr', 'pos', 'mut.ref', 'mut.alt', 'wt.ref', 'wt.alt', 'ratio', 'fitted'))
@@ -114,9 +127,13 @@ tbl3.cands.m=melt(tbl3.cands, id.vars=c('At_num', 'gene', 'chr', 'pos', 'mut.ref
 x11()
 ggplot(tbl3.m, aes(pos, value)) + geom_point(aes(color=variable),size=0.3)+ facet_grid (.~ chr, scales = "free_x", space = "free_x")+geom_point(data=tbl3.cands.m, aes(x=pos, y=value), shape=5)+geom_text_repel(data=tbl3.cands.m, aes(x=pos, y=value, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks, labels=fancy_scientific)+labs(x="position", y="ratio")
 
-ggsave("Rplot_allele.pdf")
+#JEN changed file name
+Rplot_allele_file <- paste(line, ".Rplot_allele.pdf", sep="")
+ggsave(Rplot_allele_file)
 #######################################
 #######################################
+
+#JEN - comment - best to remove this stuff below, don't you think.
 
 #separated chromosomes original data; after filtering (tbl2)
 # ggplot(tbl3, aes(x=pos, y=ratio))+geom_point(data=tbl3, aes(x=pos, y=ratio, color=as.factor(tbl3[,3])),size=0.3)+facet_wrap(~chr, scales='free_x')+geom_point(data=tbl3.cands, aes(x=pos, y=ratio), shape=5)+geom_text_repel(data=tbl3.cands, aes(x=pos, y=ratio, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks)

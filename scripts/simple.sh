@@ -7,7 +7,7 @@
 #exec 1>log.out 2>&1
 
 #reading variables
-source ./scripts/simple_vars.sh
+source ./scripts/simple_variables.sh
 
 #creating a log file for the input commands; I also wanted to have logs for the output but some of the stdout are super long
 cat ./scripts/simple.sh > ./output/log.txt
@@ -115,8 +115,18 @@ java -jar programs/GenomeAnalysisTK.jar -R $fa -T VariantsToTable -V output/$lin
 #snpEff
 java -jar programs/snpEff/snpEff.jar -c programs/snpEff/snpEff.config $snpEffDB -s output/snpEff_summary.html output/$line.hc.vcf > output/$line.se.vcf
 
-#and finally, get only the ones that are ref/ref or ref/alt in the wt bulk and alt/alt in the mut bulk
-grep -v '^##' output/$line.se.vcf | awk 'BEGIN{FS=" "; OFS=" "} $1~/#CHROM/ || $10~/^1\/1/ && ($11~/^1\/0/ || $11~/^0\/0/ || $11~/^0\/1/) && $1~/^[0-9]*$/ && /splice_acceptor_variant|splice_donor_variant|start_lost|stop_gained|missense_variant/ {$3=$7=""; print $0}' | sed 's/  */ /g' | awk '{split($9,a,":"); split(a[2],b,","); if (b[1]>b[2] || $1~/#CHROM/) print $0}' > output/$line.cands2.txt
+###%%%%%%% JEN %%%%%%%%%%
+#and finally, get only the SNPs that are ref/ref or ref/alt in the wt bulk and alt/alt in the mut bulk for recessive mutations
+#for the case of dominant mutations should be ref/ref in the wt bulk and ref/alt or alt/alt in the mutant bulk
+#column 10 is mutant bulk
+#column 11 is WT bulk
+if [ $mutation = "recessive" ]; then
+	grep -v '^##' output/$line.se.vcf | awk 'BEGIN{FS=" "; OFS=" "} $1~/#CHROM/ || $10~/^1\/1/ && ($11~/^1\/0/ || $11~/^0\/0/ || $11~/^0\/1/) && $1~/^[0-9]*$/ && /splice_acceptor_variant|splice_donor_variant|start_lost|stop_gained|missense_variant/ {$3=$7=""; print $0}' | sed 's/  */ /g' | awk '{split($9,a,":"); split(a[2],b,","); if (b[1]>b[2] || $1~/#CHROM/) print $0}' > output/$line.cands2.txt
+else
+	grep -v '^##' output/$line.se.vcf | awk 'BEGIN{FS=" "; OFS=" "} $1~/#CHROM/ || ($10~/^0\/1/ || $10~/^1\/0/ || $10~/^1\/1/) && $11~/^0\/0/ && $1~/^[0-9]*$/ && /splice_acceptor_variant|splice_donor_variant|start_lost|stop_gained|missense_variant/ {$3=$7=""; print $0}' | sed 's/  */ /g' | awk '{split($9,a,":"); split(a[2],b,","); if (b[1]>b[2] || $1~/#CHROM/) print $0}' > output/$line.cands2.txt
+fi
+
+
 #awk 'FNR==NR{a[$1$2];next};!($1$2 in a) || $1~/#CHROM/' $knownsnps output/$line.cands2.txt > output/$line.cands3.txt
 
 
@@ -124,7 +134,8 @@ grep -v '^##' output/$line.se.vcf | awk 'BEGIN{FS=" "; OFS=" "} $1~/#CHROM/ || $
 printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "chr" "pos" "ref" "alt" "mutation_effect" "gene" "At_num" "CDS_change" "protein_change" "$mut.ref" "$mut.alt" "$wt.ref" "$wt.alt" > output/$line.cands44.txt
 awk 'BEGIN{OFS="\t"} NR>1 {split($6,a,"|");split($8,b,":"); split(b[2],c,","); split($9,d,":"); split(d[2],e,","); gsub("c.", "", a[10]); gsub("p\\.", "", a[11]); print $1, $2, $3, $4, a[2], a[4], a[5], a[10], a[11], c[1], c[2], e[1], e[2]}' output/$line.cands2.txt | awk '$0!~/\./ && (($10+$11)>4) && (($12+$13)>4)' >> output/$line.cands44.txt
 
-sort -k1,1 -k2 -n output/$line.cands44.txt > output/$line.cands4.txt
+# JEN changed file name below
+sort -k1,1 -k2 -n output/$line.cands44.txt > output/$line.candidates.txt
 
 ####################################################################################################################################################
 ####################################################################################################################################################
@@ -141,11 +152,12 @@ awk 'FNR==NR{a[$1$2];next};!($1$2 in a)' $knownsnps output/$line.plot.txt > outp
 #get the snps in SnpEff format
 awk 'FNR==NR{a[$1$2];next};($1$2 in a)' output/$line.plot.no_known_snps.txt output/$line.se.vcf > output/$line.plot2.txt
 awk '{$3=$7=""; print $0}' output/$line.plot2.txt | sed 's/  */ /g' > output/$line.plot3.txt
-awk '$3!~/\./ && $4!~/\./' output/EMS.plot3.txt > output/EMS.plot33.txt
+awk '$3!~/\./ && $4!~/\./' output/$line.plot3.txt > output/$line.plot33.txt
 printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "chr" "pos" "ref" "alt" "mutation_effect" "gene" "At_num" "CDS_change" "protein_change" "mut.ref" "mut.alt" "wt.ref" "wt.alt" > output/$line.plot44.txt
 awk 'BEGIN{OFS="\t"} {split($6,a,"|");split($8,b,":"); split(b[2],c,","); split($9,d,":"); split(d[2],e,","); gsub("c.", "", a[10]); gsub("p\\.", "", a[11]); print $1, $2, $3, $4, a[2], a[4], a[5], a[10], a[11], c[1], c[2], e[1], e[2]}' output/$line.plot33.txt >> output/$line.plot44.txt
 
-sort -k1,1 -k2 -n output/$line.plot44.txt > output/$line.plot4.txt
+##JEN changed filename below
+sort -k1,1 -k2 -n output/$line.plot44.txt > output/$line.allSNPs.txt
 
 ####################################################################################################################################################
 ####################################################################################################################################################
@@ -161,8 +173,8 @@ awk 'BEGIN{OFS="\t"} NR>1 {split($6,a,"|");split($8,b,":"); split(b[2],c,","); s
 ####################################################################################################################################################
 ####################################################################################################################################################
 
-
-Rscript ./scripts/analysis3.R
+#JEN added the line argument below
+Rscript ./scripts/analysis3.R $line
 
 
 echo "$(tput setaf 1)Simple $(tput setaf 3)is $(tput setaf 4)done"
