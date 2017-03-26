@@ -28,11 +28,16 @@ candidatefilename <- paste(line, ".candidates.txt", sep="")
 mntn=read.delim(plotfilename, header=T)#In my previous version of R, but NOT on the bioross server, R adds an extra NA column
 cnds=read.delim(candidatefilename, header =T, sep = "\t")
 
-mntn1=droplevels(mntn[((mntn$chr!="Mt")&(mntn$chr!="Pt")),])
+#mntn1=droplevels(mntn[((mntn$chr!="Mt")&(mntn$chr!="Pt")),])
+mntn1= mntn[!(mntn$chr=="Mt" | mntn$chr=="Pt"),]
+
+
 #mntn1=droplevels(mntn[((mntn$ref=="C"&mntn$alt=="T")|(mntn$ref=="G"&mntn$alt=="A"))&(mntn$chr!="Mt")&(mntn$chr!="Pt"),])
 
 # tbl1[tbl1[,1]=="AT3G28550",]
-# head(mntn)
+# tail(mntn, n=10)
+# dim(mntn1)
+
 
 wt=mntn1$wt.ref/(mntn1$wt.ref+mntn1$wt.alt)
 mut=mntn1$mut.ref/(mntn1$mut.ref+mntn1$mut.alt)
