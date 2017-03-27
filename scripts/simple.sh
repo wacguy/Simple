@@ -180,8 +180,6 @@ Rscript ./scripts/analysis3.R $line
 mkdir ./archive
 mv ./output/* ./archive/
 mv ./archive/*pdf* ./archive/$line.allSNPs.txt ./archive/$line.candidates.txt ./output/
-tar -zcvf archive.tar.gz archive/
-rm -r ./archive
 
 
 echo "$(tput setaf 1)Simple $(tput setaf 3)is $(tput setaf 4)done"
