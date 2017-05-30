@@ -1,8 +1,4 @@
 
-**Always follow only the Github README file (and not the one published on Plant Physiology).**
-Strong emphasis, aka bold, with asterisks or underscores.
-
-
 
 # SIMPLE — A SIMPLE pipeline for mapping point mutations
 
