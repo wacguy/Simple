@@ -178,9 +178,8 @@ Rscript ./scripts/analysis3.R $line
 
 #archiving files
 mkdir ./archive
-mv ./output/* ./archive/
-mv ./archive/*pdf* ./archive/$line.allSNPs.txt ./archive/$line.candidates.txt ./output/
-
+mv ./output/$line.* ./archive/
+mv ./archive/$line.*pdf* ./archive/$line.allSNPs.txt ./archive/$line.candidates.txt ./output/
 
 echo "$(tput setaf 1)Simple $(tput setaf 3)is $(tput setaf 4)done"
 
