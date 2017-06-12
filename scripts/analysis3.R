@@ -1,8 +1,8 @@
 #################################################################################
 #################################################################################
-# setwd("/Users/guywachsman/Guy/EMS1/pipeline/manuel")
-# mntn=read.delim("/Users/guywachsman/Guy/EMS1/pipeline/manuel/manuel.plot4.txt", header=T)
-# cnds=read.delim("/Users/guywachsman/Guy/EMS1/pipeline/manuel/manuel.candidates.txt", header =T, sep = "\t")
+# setwd("/Users/guywachsman/Guy/EMS1/pipeline/M2_194")
+# mntn=read.delim("/Users/guywachsman/Guy/EMS1/pipeline/M2_194/EMS.plot4.txt", header=T)
+# cnds=read.delim("/Users/guywachsman/Guy/EMS1/pipeline/M2_194/EMS.cands4.txt", header =T, sep = "\t")
 # setwd("/Users/guywachsman/Guy/EMS1/pipeline/SIMPLE/Simple")
 
 
@@ -130,7 +130,7 @@ tbl3.cands.m=melt(tbl3.cands, id.vars=c('At_num', 'gene', 'chr', 'pos', 'mut.ref
 
 
 x11()
-ggplot(tbl3.m, aes(pos, value)) + geom_point(aes(color=variable),size=0.3)+ facet_grid (.~ chr, scales = "free_x", space = "free_x")+geom_point(data=tbl3.cands.m, aes(x=pos, y=value), shape=5)+geom_text_repel(data=tbl3.cands.m, aes(x=pos, y=value, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks, labels=fancy_scientific)+labs(x="position", y="ratio")
+ggplot(tbl3.m, aes(pos, value)) + geom_point(aes(color=variable),size=0.3)+ facet_grid (.~ chr, scales = "free_x", space = "free_x")+geom_point(data=tbl3.cands.m, aes(x=pos, y=value), shape=5)+geom_text_repel(data=tbl3.cands.m, aes(x=pos, y=value, label=gene), size=3)+theme(legend.position="none")+scale_x_continuous(breaks=breaks, labels=fancy_scientific)+labs(x="position", y="allele frequency")
 
 #JEN changed file name
 Rplot_allele_file <- paste(line, ".Rplot_allele.pdf", sep="")
