@@ -159,6 +159,3 @@ ggsave(Rplot_allele_file)
 
 
 
-
-
-
