@@ -129,7 +129,7 @@ tbl3.cands.m=melt(tbl3.cands, id.vars=c('At_num', 'gene', 'chr', 'pos', 'mut.ref
 
 
 x11()
-ggplot(tbl3.m, aes(pos, value)) + geom_point(aes(color=variable),size=0.3)+ facet_grid (.~ chr, scales = "free_x", space = "free_x")+geom_point(data=tbl3.cands.m, aes(x=pos, y=value), shape=5)+geom_text_repel(data=tbl3.cands.m, aes(x=pos, y=value, label=gene), size=3)+theme()+scale_x_continuous(breaks=breaks, labels=fancy_scientific)+labs(x="position", y="allele frequency")
+ggplot(tbl3.m, aes(pos, value)) + geom_point(aes(color=variable),size=0.3)+ facet_grid (.~ chr, scales = "free_x", space = "free_x")+geom_point(data=tbl3.cands.m, aes(x=pos, y=value), shape=5)+geom_text_repel(data=tbl3.cands.m, aes(x=pos, y=value, label=gene), size=3)+theme(legend.title = element_text(size = 0))+scale_x_continuous(breaks=breaks, labels=fancy_scientific)+labs(x="position", y="allele frequency")
 
 #JEN changed file name
 Rplot_allele_file <- paste(line, ".Rplot_allele.pdf", sep="")
@@ -148,10 +148,8 @@ ggsave(Rplot_allele_file)
 
 
 
-
-
-
-
+?theme
+?element_text
 
 
 
