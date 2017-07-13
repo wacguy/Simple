@@ -32,7 +32,7 @@ if ! [ -f ./refs/$my_species.fa ]; then
   gzip -d ./refs/$my_species.fa.gz
 fi
 
-awk '1;/^>/ && (!/[Cc]hromosome/ || /[Ss]caffold/ || /[Cc]ontig/){exit}' ./refs/$my_species.fa | head -n -1 > ./refs/$my_species.chrs.fa
+awk '/[Ss]caffold/ || /[Cc]ontig/ {exit} {print}' ./refs/$my_species.fa > ./refs/$my_species.chrs.fa
 fa=./refs/$my_species.chrs.fa
 
 #downloading & creating knownsnps file
