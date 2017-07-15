@@ -45,7 +45,6 @@ fi
 #snpEff "link"
 snpEff_link=`awk -v var="$my_species" 'match($1, var) {print $4}' ./scripts/data_base.txt`
 
-
 #reference input files that are necessary to run the prograns
 knownsnps=./refs/$my_species.vcf
 #ftp://ftp.ensemblgenomes.org/pub/plants/release-31/vcf/arabidopsis_thaliana/arabidopsis_thaliana.vcf.gz
@@ -97,7 +96,6 @@ java -Xmx2g -jar programs/picard-tools-1.119/BuildBamIndex.jar INPUT=output/$mut
 java -Xmx2g -jar programs/picard-tools-1.119/BuildBamIndex.jar INPUT=output/$wt.sort.md.rg.bam
 wait
 
-
 #Variant calling using GATK HC extra parameters
 java -Xmx2g -jar programs/GenomeAnalysisTK.jar -T HaplotypeCaller -R $fa -I output/$mut.sort.md.rg.bam -I output/$wt.sort.md.rg.bam -o output/$line.hc.vcf -minReadsPerAlignStart 7 -gt_mode DISCOVERY -out_mode EMIT_ALL_SITES -writeFullFormat -stand_emit_conf 10 -stand_call_conf 10 -nct 2 -variant_index_type LINEAR -variant_index_parameter 128000 -allowPotentiallyMisencodedQuals #the last argument is necessary for old sequencing results where the quality scores do not match the HC restriction: https://www.biostars.org/p/94637/; I also tried --fix_misencoded_quality_scores -fixMisencodedQuals from the same link but I received an error message. "Bad input: while fixing mis-encoded base qualities we encountered a read that was correctly encoded; we cannot handle such a mixture of reads so unfortunately the BAM must be fixed with some other tool"
 
@@ -107,7 +105,6 @@ java -Xmx2g -jar programs/GenomeAnalysisTK.jar -T HaplotypeCaller -R $fa -I outp
 
 #now make it into a table
 java -jar programs/GenomeAnalysisTK.jar -R $fa -T VariantsToTable -V output/$line.hc.vcf -F CHROM -F POS -F REF -F ALT -GF GT -GF AD -GF DP -GF GQ -o output/$line.table
-
 
 ####################################################################################################################################################
 ########################################now let's find the best candidates##########################################################################
@@ -126,9 +123,7 @@ else
 	grep -v '^##' output/$line.se.vcf | awk 'BEGIN{FS=" "; OFS=" "} $1~/#CHROM/ || ($10~/^0\/1/ || $10~/^1\/0/ || $10~/^1\/1/) && $11~/^0\/0/ && $1~/^[0-9]*$/ && /splice_acceptor_variant|splice_donor_variant|splice_region_variant|stop_lost|start_lost|stop_gained|missense_variant|coding_sequence_variant|inframe_insertion|disruptive_inframe_insertion|inframe_deletion|disruptive_inframe_deletion|exon_variant|exon_loss_variant|exon_loss_variant|duplication|inversion|frameshift_variant|feature_ablation|duplication|gene_fusion|bidirectional_gene_fusion|rearranged_at_DNA_level|miRNA|initiator_codon_variant|start_retained/ {$3=$7=""; print $0}' | sed 's/  */ /g' | awk '{split($9,a,":"); split(a[2],b,","); if (b[1]>b[2] || $1~/#CHROM/) print $0}' > output/$line.cands2.txt
 fi
 
-
 #awk 'FNR==NR{a[$1$2];next};!($1$2 in a) || $1~/#CHROM/' $knownsnps output/$line.cands2.txt > output/$line.cands3.txt
-
 
 #getting things a bit more organized and only the relevant data from cands3
 printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "chr" "pos" "ref" "alt" "mutation_effect" "gene" "At_num" "CDS_change" "protein_change" "$mut.ref" "$mut.alt" "$wt.ref" "$wt.alt" > output/$line.cands44.txt
