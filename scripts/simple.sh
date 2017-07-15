@@ -164,7 +164,6 @@ awk 'FNR==NR{a[$1$2];next};!($1$2 in a) || $1~/#CHROM/' $knownsnps output/$line.
 printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "chr" "pos" "ref" "alt" "mutation_effect" "gene" "At_num" "CDS_change" "protein_change" "$mut.ref" "$mut.alt" "$wt.ref" "$wt.alt" > output/$line.cands_alt4.txt
 awk 'BEGIN{OFS="\t"} NR>1 {split($6,a,"|");split($8,b,":"); split(b[2],c,","); split($9,d,":"); split(d[2],e,","); gsub("c.", "", a[10]); gsub("p\\.", "", a[11]); print $1, $2, $3, $4, a[2], a[4], a[5], a[10], a[11], c[1], c[2], e[1], e[2]}' output/$line.cands_alt3.txt | awk '$0!~/\./ && (($10+$11)>4) && (($12+$13)>4)' >> output/$line.cands_alt4.txt
 
-
 ####################################################################################################################################################
 ####################################################################################################################################################
 
@@ -177,7 +176,6 @@ mv ./output/* ./archive/
 mv ./archive/$line.*pdf* ./archive/$line.allSNPs.txt ./archive/$line.candidates.txt ./output/
 
 echo "$(tput setaf 1)Simple $(tput setaf 3)is $(tput setaf 4)done"
-
 
 
 
