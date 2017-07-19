@@ -148,12 +148,4 @@ ggsave(Rplot_allele_file)
 
 
 
-?theme
-?element_text
-
-
-
-
-
-
 
