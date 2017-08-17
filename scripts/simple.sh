@@ -50,7 +50,7 @@ fa=./refs/$my_species.chrs.fa
 #downloading & creating knownsnps file
 knownsnps_link=`awk -v var="$my_species" 'match($1, var) {print $3}' ./scripts/data_base.txt`
 if ! [ -f ./refs/$my_species.vcf ]; then
-  curl -o ./refs/$my_species.vcf.gz $knownsnps_link
+  curl -o ./refs/$my_species.vcf.gz -Lk $knownsnps_link
   gzip -d ./refs/$my_species.vcf.gz
 fi
 
@@ -151,7 +151,7 @@ sort -k1,1 -k2 -n output/$line.cands44.txt > output/$line.candidates.txt
 ####################################################################################################################################################
 #this command will make it ready to run w/ R to produce Manhatten plot
 printf "%s\t" "CHR" "POS" "REF" "ALT" "mut_GT" "mut.ref" "mut.alt" "mut.DP" "mut.GQ" "wt.GT" "wt.ref" "wt.alt" "wt.DP" "wt.GQ" > output/$line.plot.txt; printf "\n" >> output/$line.plot.txt
-awk '$1~/^[0-9]*$/ && $5~/^[AGCT]/ && $9~/^[AGCT]/ && $0 !~ /NA/ && $2 !~ /\./ && $3 !~ /\./ {gsub(/\,/, "\t"); print}' output/$line.table | awk '$6+$11>0 && $8>3 && $13>3' >> output/$line.plot.txt
+awk '$1~/^[0-9X]*$/ && $5~/^[AGCT]/ && $9~/^[AGCT]/ && $0 !~ /NA/ && $2 !~ /\./ && $3 !~ /\./ {gsub(/\,/, "\t"); print}' output/$line.table | awk '$6+$11>0 && $8>3 && $13>3' >> output/$line.plot.txt
 
 #and finally, just get rid of known snps
 awk 'FNR==NR{a[$1$2];next};!($1$2 in a)' $knownsnps output/$line.plot.txt > output/$line.plot.no_known_snps.txt
