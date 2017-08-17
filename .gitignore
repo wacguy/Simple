@@ -1,6 +1,14 @@
 .DS_Store
-./fastq/
-./output/
-./programs/
+/archive/*
+!/archive/empty.txt
+/fastq/*
+!/fastq/empty.txt
+/output/*
+!/output/empty.txt
+#/programs/**
+#!/programs/empty.txt
+/refs/*
+!/refs/empty.vcf
+!/refs/empty.vcf.gz
 ~*
 .Rapp.history
