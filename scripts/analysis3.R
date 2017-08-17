@@ -28,7 +28,7 @@ mntn=read.delim(plotfilename, header=T)#In my previous version of R, but NOT on 
 cnds=read.delim(candidatefilename, header =T, sep = "\t")
 
 #mntn1=droplevels(mntn[((mntn$chr!="Mt")&(mntn$chr!="Pt")),])
-mntn1= mntn[!(mntn$chr=="Mt" | mntn$chr=="Pt"),]
+mntn1= mntn[!(mntn$chr=="Mt" | mntn$chr=="Pt") | mntn$chr=="MtDNA"),]
 
 
 #mntn1=droplevels(mntn[((mntn$ref=="C"&mntn$alt=="T")|(mntn$ref=="G"&mntn$alt=="A"))&(mntn$chr!="Mt")&(mntn$chr!="Pt"),])

@@ -32,6 +32,16 @@ if ! [ -f ./refs/$my_species.fa ]; then
   gzip -d ./refs/$my_species.fa.gz
 fi
 
+#replacing roman numerals in numbers
+if [ $my_species = "caenorhabditis_elegans" ]; then
+    awk '{gsub(">III", ">3", $1); gsub(">II", ">2", $1); gsub(">IV", ">4", $1); gsub(">I", ">1", $1); gsub(">V", ">5", $1);print}' ./refs/$my_species.fa > ./refs/$my_species.1.fa
+fi
+
+if [ -f ./refs/$my_species.1.fa ]; then 
+    mv ./refs/$my_species.1.fa ./refs/$my_species.fa
+fi
+
+#leaving only chromosomes (no scafolds or contiges)
 awk '/[Ss]caffold/ || /[Cc]ontig/ {exit} {print}' ./refs/$my_species.fa > ./refs/$my_species.chrs.fa
 fa=./refs/$my_species.chrs.fa
 
