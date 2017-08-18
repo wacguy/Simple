@@ -34,7 +34,7 @@ fi
 
 #replacing roman numerals in numbers
 if [ $my_species = "caenorhabditis_elegans" ]; then
-    awk '{gsub(">III", ">3", $1); gsub(">II", ">2", $1); gsub(">IV", ">4", $1); gsub(">I", ">1", $1); gsub(">V", ">5", $1);print}' ./refs/$my_species.fa > ./refs/$my_species.1.fa
+    awk '{gsub(/^[\>][I]$/, ">1", $1); gsub(/^[\>][I][I]$/, ">2", $1); gsub(/^[\>][I][I][I]$/, ">3", $1); gsub(/^[\>][I][V]$/, ">4", $1); gsub(/^[\>][V]$/, ">5", $1);print}' ./refs/$my_species.fa > ./refs/$my_species.1.fa
 fi
 
 if [ -f ./refs/$my_species.1.fa ]; then 
