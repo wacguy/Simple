@@ -13,8 +13,6 @@ source ./scripts/simple_variables.sh
 cat ./scripts/simple.sh > ./output/log.txt
 cat ./scripts/analysis3.R >> ./output/log.txt
 
-exec 2>> log.txt
-
 #install programs bwa and samtools
 cd programs/bwa-0.7.12
 make clean 
