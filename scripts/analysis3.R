@@ -3,7 +3,7 @@
 # setwd("/Users/guywachsman/Guy/EMS1/pipeline/M2_194-proof/")
 # mntn=read.delim("/Users/guywachsman/Guy/EMS1/pipeline/M2_194-proof/EMS.allSNPs.txt", header=T)
 # cnds=read.delim("/Users/guywachsman/Guy/EMS1/pipeline/M2_194-proof/EMS.candidates.txt", header =T, sep = "\t")
-# setwd("/Users/guywachsman/Guy/EMS1/pipeline/SIMPLE/Simple")
+# setwd("/Users/guywachsman/Dropbox (Duke Bio_Ea)/EMS1/pipeline/manuel/output")
 
 setwd("./output")
 library("ggplot2")
@@ -41,6 +41,12 @@ mntn1= mntn[!(mntn$chr=="Mt" | mntn$chr=="Pt" | mntn$chr=="MtDNA"),]
 wt=mntn1$wt.ref/(mntn1$wt.ref+mntn1$wt.alt)
 mut=mntn1$mut.ref/(mntn1$mut.ref+mntn1$mut.alt)
 ratio=wt-mut
+
+allSNPs=data.frame(mntn, ratio)
+head(allSNPs)
+write.table(allSNPs, "allSNPs.txt", sep="\t", row.names=F)
+
+
 
 tbl1=data.frame(At_num=mntn1$At_num, gene=mntn1$gene, chr=mntn1$chr, pos=mntn1$pos, mut.ref=mntn1$mut.ref, mut.alt=mntn1$mut.alt, wt.ref=mntn1$wt.ref, wt.alt=mntn1$wt.alt, mut.ratio=mut, wt.ratio=wt, ratio)
 tbl1=tbl1[complete.cases(tbl1),]
