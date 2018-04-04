@@ -181,7 +181,6 @@ awk 'BEGIN{OFS="\t"} NR>1 {split($6,a,"|");split($8,b,":"); split(b[2],c,","); s
 Rscript ./scripts/analysis3.R $line
 
 #archiving files
-mkdir ./archive
 mv ./output/* ./archive/
 mv ./archive/$line.*pdf* ./archive/*.allSNPs.txt ./archive/$line.candidates.txt ./output/
 
