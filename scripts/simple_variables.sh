@@ -3,8 +3,8 @@
 #variables file
 
 #input files
-mut_files=fastq/mut*
-wt_files=fastq/wt*
+mut_files=fastq/*mut*
+wt_files=fastq/*wt*
 
 #names
 mutation=recessive #change to dominant if the mutation is dominant
